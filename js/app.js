@@ -5,6 +5,11 @@ var gridWidth = 5;
 var yCenter = 30;
 var xCenter = 50;
 var speedMulti = 100;
+var sprites = ['images/char-boy.png',
+    'images/char-cat-girl.png',
+    'images/char-horn-girl.png',
+    'images/char-pink-girl.png',
+    'images/char-princess-girl.png'];
 
 
 /**
@@ -48,6 +53,7 @@ var Player = function() {
     this.sprite = 'images/char-boy.png';
     this.y = 5 * blockHeight - yCenter;
     this.x = 2 * blockwidth;
+    playing = false;
 }
 
 // Draw player on screen
@@ -97,12 +103,67 @@ Player.prototype.handleInput = function(allowedKeys) {
     }
 }
 
+/**
+* Player selector object
+*/
+var PlayerSelector = function() {
+    this.sprite = 'images/Selector.png';
+    this.x = 0;
+    this.y = blockHeight * 5 - 40;
+    this.position = 0;
+}
+//render selector
+PlayerSelector.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+//method to allow selector to move
+PlayerSelector.prototype.handleInput = function(allowedKeys) {
+    switch (allowedKeys) {
+        case 'left':
+            if (this.x >= blockwidth) {
+                this.x -= blockwidth;
+                this.position -=1;
+            }
+            break;
+        case 'right':
+            if (this.x < 4 * blockwidth) {
+                this.x += blockwidth;
+                this.position +=1;
+            }
+            break;
+        case 'up':
+            if (this.y > blockHeight) {
+                player.playing = true;
+                player.sprite = sprites[this.position];
+            }
+            break;
+    }
+}
+
+/**
+* CharacterSprite object
+* Used to display character sprites
+*/
+var CharacterSprite = function(sprit , xCord) {
+    this.sprite = sprit;
+    this.y = 5 * blockHeight - yCenter;
+    this.x = xCord;
+}
+
+//render character sprite
+CharacterSprite.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
 // instantiate objects.
 var allEnemies = [];
+var allSprites = [];
+var selector = new PlayerSelector();
 var player = new Player();
-for (var i = 0; i < 4; i++){
+for (var i = 0; i < 5; i++){
     allEnemies[i] = new Enemy();
-}
+    allSprites[i] = new CharacterSprite(sprites[i], i * blockwidth);
+};
 
 
 // This listens for key presses and sends the keys to your
@@ -114,6 +175,10 @@ document.addEventListener('keyup', function(e) {
         39: 'right',
         40: 'down'
     };
-
-    player.handleInput(allowedKeys[e.keyCode]);
+    //only move player if user is past character select screen.
+    if (player.playing){
+        player.handleInput(allowedKeys[e.keyCode]);
+    }else{
+        selector.handleInput(allowedKeys[e.keyCode]);
+    }
 });
