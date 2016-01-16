@@ -7,13 +7,11 @@ var xCenter = 50;
 var speedMulti = 100;
 
 
-// Enemies our player must avoid
+/**
+* Enemy class constructor
+* Sets Enemy to random lane, one of three speeds and staggers them off the left of the screen.
+*/
 var Enemy = function() {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
-
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
     this.x = -1 * Math.floor((Math.random() * 6) + 1) * blockwidth;
     this.y = (Math.floor((Math.random() * 3) + 1) * blockHeight) - yCenter;
@@ -52,19 +50,26 @@ var Player = function() {
     this.x = 2 * blockwidth;
 }
 
+// Draw player on screen
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+//Required method for engine.js
 Player.prototype.update = function() {
 
 };
 
+//move player back to starting position
 Player.prototype.reset = function() {
     this.y = 5 * blockHeight - yCenter;
     this.x = 2 * blockwidth;
 }
 
+/**
+* Method to move player around map, each arrow checks if a move is available.
+* A move up at the top of the screen brings player back to start.
+*/
 Player.prototype.handleInput = function(allowedKeys) {
     switch (allowedKeys) {
         case 'left':
@@ -92,9 +97,7 @@ Player.prototype.handleInput = function(allowedKeys) {
     }
 }
 
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
+// instantiate objects.
 var allEnemies = [];
 var player = new Player();
 for (var i = 0; i < 4; i++){
