@@ -1,6 +1,11 @@
-frontend-nanodegree-arcade-game
-===============================
+# Arcade Game Clone
 
-Students should use this [rubric](https://www.udacity.com/course/viewer/#!/c-nd001/l-2696458597/m-2687128535) for self-checking their submission.
+This project is a clone of the classic arcade game Frogger
 
-For detailed instructions on how to get started, check out this [guide](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true).
+## How to use
+1. Clone or Download this <a href "">repository</a>.
+2. Open index.html with your browser.
+## How to play
+* Control the player with the arrow keys.
+* Try to get the player from the grass to the water.
+* If you are hit by a bug you will be sent back to the start.

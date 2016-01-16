@@ -1,3 +1,12 @@
+var blockHeight = 83;
+var blockwidth = 101;
+var gridHeight = 6;
+var gridWidth = 5;
+var yCenter = 30;
+var xCenter = 50;
+var speedMulti = 100;
+
+
 // Enemies our player must avoid
 var Enemy = function() {
     // Variables applied to each of our instances go here,
@@ -6,14 +15,26 @@ var Enemy = function() {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
+    this.x = -1 * Math.floor((Math.random() * 6) + 1) * blockwidth;
+    this.y = (Math.floor((Math.random() * 3) + 1) * blockHeight) - yCenter;
+    this.speed = Math.floor((Math.random() * 3) + 1) * speedMulti;
 };
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
+    //move the enemy
+    this.x += this.speed * dt;
+    //reset enemy when it moves off screen, with new row and speed
+    if (this.x >= 606) {
+        this.x = -101;
+        this.y = (Math.floor((Math.random() * 3) + 1) * blockHeight) - yCenter;
+        this.speed = Math.floor((Math.random() * 3) + 1) * speedMulti;
+    }
+    //logic for collsions
+    if (this.x >= player.x - 50 && this.x <= player.x + 50 && this.y == player.y){
+        player.reset();
+    }
 };
 
 // Draw the enemy on the screen, required method for game
@@ -21,15 +42,64 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
+var Player = function() {
+    this.sprite = 'images/char-boy.png';
+    this.y = 5 * blockHeight - yCenter;
+    this.x = 2 * blockwidth;
+}
 
+Player.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+Player.prototype.update = function() {
+
+};
+
+Player.prototype.reset = function() {
+    this.y = 5 * blockHeight - yCenter;
+    this.x = 2 * blockwidth;
+}
+
+Player.prototype.handleInput = function(allowedKeys) {
+    switch (allowedKeys) {
+        case 'left':
+            if (this.x >= blockwidth) {
+                this.x -= blockwidth;
+            }
+            break;
+        case 'right':
+            if (this.x < 4 * blockwidth) {
+                this.x += blockwidth;
+            }
+            break;
+        case 'up':
+            if (this.y > blockHeight) {
+                this.y -= blockHeight;
+            }else{
+                this.reset();
+            }
+            break;
+        case 'down':
+            if (this.y <= 4 * blockHeight ) {
+                this.y += blockHeight;
+            }
+            break;
+    }
+}
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-
+var allEnemies = [];
+var player = new Player();
+for (var i = 0; i < 4; i++){
+    allEnemies[i] = new Enemy();
+}
 
 
 // This listens for key presses and sends the keys to your
